@@ -23,22 +23,28 @@
 <body lang="pt-br">
 
 	<?php
-		if ( isset($_SESSION['Usuario']) ) {
-			echo '<h1>Acesso concedido!</h1>';
-			echo '<a href="logout.php">Clique aqui para sair!</a>';
-		} else {
-			echo '<h1>Acesso negado!</h1>';
-			echo '<a href="login.php">Clique aqui para fazer login</a>';
+		unset($_SESSION['Usuario']);
+		unset($_SESSION);
+		$_SESSION = array();
+		
+		$params = session_get_cookie_params();
+		setcookie( session_name(), '', time() - 42000,
+			$params['path'], $params['domain'],
+			$params['secure'], $params['httponly']
+		);
+		
+		if ( isset($_COOKIE[session_name()]) ) {
+			setcookie(session_name(), '', time()-420000, '/');
 		}
+		
+		session_destroy();
 	?>
 
+	<h1>Voce saiu com sucesso!</h1>
+	<a href="index.php">Clique aqui para iniciar novamente!</a>
 
 	<script src="js/jquery.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 
 </body>
 </html>
-<?php
-
-	session_write_close();
-	
